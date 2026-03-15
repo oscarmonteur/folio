@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oscar SANDER — Monteur Vidéo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      /* Fresh colour palette for a modern, mobile‑friendly design */
+      /* Animated soft gradient for the page background */
+      --bg:      linear-gradient(120deg, #ffffff 0%, #f6fff6 50%, #ffffff 100%);
+      /* Main text colour is now dark for contrast on the light background */
+      --white:   #1a1a1a;
+      /* Muted text uses a semi‑transparent dark tone */
+      --muted:   rgba(0,0,0,0.6);
+      /* Dim lines and separators are subtly dark */
+      --dim:     rgba(0,0,0,0.1);
+      /* Accent colours shifted to an even softer matte green for a friendlier look */
+      --acc:     #8bcf8d;
+      --acc2:    #c6e6c7;
+      --acc-glow: rgba(139,207,141,0.2);
+      /* Gradient used in bars utilises the updated accent colours */
+      --grad-acc: linear-gradient(90deg, transparent, var(--acc), var(--acc2), var(--acc), transparent);
+    }
+
+    /* ── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Space Mono', monospace;
+      overflow-x: hidden;
+      /* Show the default cursor. Removing the custom cursor improves fluidity. */
+      cursor: default;
+      /* Animate the background for a lively yet subtle effect on light backgrounds */
+      background-size: 400% 400%;
+      animation: bgSlide 20s ease infinite;
+    }
+
+    /* Removed noise grain overlay for a clean and crisp white background */
+    body::after {
+      content:'';
+      display:none;
+    }
+
+    /* Removed custom cursor styles to restore the default system cursor for better performance */
+
+    /* ── INTRO ──────────────────────────────────────────────── */
+    #intro {
+      position:fixed; inset:0;
+      background:var(--bg);
+      z-index:10000;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap:40px;
+    }
+
+    .i-eyebrow {
+      font-family:'Space Mono', monospace;
+      font-size:10px; letter-spacing:.5em;
+      text-transform:uppercase;
+      color:var(--muted);
+      opacity:0;
+      animation: fadeUp .7s ease .3s forwards;
+    }
+
+    .i-name {
+      font-family:'Syne', sans-serif;
+      font-weight:800;
+      font-size: clamp(38px,7vw,80px);
+      letter-spacing:.15em;
+      text-transform:uppercase;
+      color:var(--white);
+      opacity:0;
+      animation: fadeUp .7s ease .55s forwards;
+    }
+
+    /* Timeline tracks */
+    .i-timeline {
+      width: clamp(280px,58vw,680px);
+      display:flex; flex-direction:column; gap:10px;
+      opacity:0;
+      animation: fadeUp .5s ease .8s forwards;
+    }
+
+    .i-track {
+      position:relative; height:3px;
+      background: rgba(0,0,0,.07);
+      overflow:hidden;
+    }
+
+    /* Each track has a glowing block sweep */
+    .i-sweep {
+      position:absolute; top:0; left:-200px;
+      height:100%;
+      background:linear-gradient(90deg, transparent, rgba(0,0,0,.9), transparent);
+    }
+
+    .i-track:nth-child(1) .i-sweep { width:120px; animation: sweep 2s cubic-bezier(.4,0,.2,1) 1s forwards; }
+    .i-track:nth-child(2) .i-sweep { width:60px;  animation: sweep 2s cubic-bezier(.4,0,.2,1) 1.15s forwards; }
+    .i-track:nth-child(3) .i-sweep { width:200px; animation: sweep 2s cubic-bezier(.4,0,.2,1) 1.3s forwards; }
+    .i-track:nth-child(4) .i-sweep { width:40px;  animation: sweep 2s cubic-bezier(.4,0,.2,1) 1.45s forwards; }
+
+    /* White solid fill blocks that remain */
+    .i-track::after {
+      content:'';
+      position:absolute; top:0; left:0;
+      height:100%;
+      background:rgba(0,0,0,.22);
+    }
+    .i-track:nth-child(1)::after { width:42%; animation: trackFill 1.8s cubic-bezier(.4,0,.2,1) 1s forwards; }
+    .i-track:nth-child(2)::after { width:27%; animation: trackFill 1.8s cubic-bezier(.4,0,.2,1) 1.15s forwards; }
+    .i-track:nth-child(3)::after { width:68%; animation: trackFill 1.8s cubic-bezier(.4,0,.2,1) 1.3s forwards; }
+    .i-track:nth-child(4)::after { width:15%; animation: trackFill 1.8s cubic-bezier(.4,0,.2,1) 1.45s forwards; }
+
+    .i-track::after { width:0; }
+
+    .i-track-labels {
+      display:flex; justify-content:space-between; margin-top:14px;
+    }
+    .i-track-labels span {
+      font-family:'Space Mono',monospace;
+      font-size:9px; letter-spacing:.25em;
+      color:rgba(0,0,0,.3);
+      text-transform:uppercase;
+    }
+
+    .i-counter {
+      font-family:'Space Mono',monospace; font-size:11px;
+      letter-spacing:.2em; color:rgba(0,0,0,.5);
+      text-align:right; margin-top:6px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(14px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes sweep {
+      from { left:-200px; }
+      to   { left:110%; }
+    }
+    @keyframes trackFill {
+      from { width:0; }
+    }
+
+    /* Animated gradient movement for the page background */
+    @keyframes bgSlide {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Intro exit */
+    #intro.exit {
+      animation: introOut 1.1s cubic-bezier(.76,0,.24,1) forwards;
+    }
+    @keyframes introOut {
+      0%   { clip-path: inset(0 0 0 0); opacity:1; }
+      100% { clip-path: inset(100% 0 0 0); opacity:1; }
+    }
+
+    /* ── MAIN CONTENT ───────────────────────────────────────── */
+    #page {
+      opacity:0;
+      transition:opacity 1s ease .1s;
+    }
+    #page.visible { opacity:1; }
+
+    /* ── NAV ────────────────────────────────────────────────── */
+    nav {
+      position:fixed; top:0; left:0; right:0;
+      z-index:1000; padding:28px 60px;
+      display:flex; justify-content:space-between; align-items:center;
+      /* On a light background we use normal blend mode for nav */
+      mix-blend-mode:normal;
+    }
+    .nav-logo {
+      font-family:'Syne',sans-serif; font-weight:800;
+      font-size:13px; letter-spacing:.35em;
+      text-transform:uppercase; color:var(--white);
+      text-decoration:none;
+    }
+    .nav-links { list-style:none; display:flex; gap:44px; }
+    .nav-links a {
+      font-family:'Space Mono',monospace; font-size:9px;
+      letter-spacing:.3em; text-transform:uppercase;
+      color:var(--white); text-decoration:none;
+      opacity:.4; transition:opacity .5s ease;
+    }
+    .nav-links a:hover { opacity:1; }
+
+    /* ── HELPERS ────────────────────────────────────────────── */
+    .acc-bar {
+      width:100%; height:1px;
+      background: var(--grad-acc);
+      opacity:.35;
+    }
+
+    .sec-tag {
+      display:flex; align-items:center; gap:18px;
+      margin-bottom:70px;
+    }
+    .sec-num {
+      font-family:'Space Mono',monospace;
+      font-size:10px; color:var(--acc); letter-spacing:.2em;
+    }
+    .sec-name {
+      font-family:'Space Mono',monospace; font-size:10px;
+      letter-spacing:.4em; text-transform:uppercase;
+      color:var(--muted);
+    }
+    .sec-rule { flex:1; height:1px; background:var(--dim); }
+
+    .big-head {
+      font-family:'Syne',sans-serif; font-weight:800;
+      font-size: clamp(42px,7.5vw,96px);
+      line-height:.92; text-transform:uppercase;
+      letter-spacing:-.02em;
+    }
+    .big-head .outline {
+      -webkit-text-stroke:2px rgba(0,0,0,.35);
+      color:transparent;
+    }
+
+    /* ── SCROLL REVEAL ──────────────────────────────────────── */
+    .rv {
+      opacity:0; transform:translateY(36px);
+      transition:opacity 1s ease, transform 1s cubic-bezier(.4,0,.2,1);
+    }
+    .rv.in { opacity:1; transform:none; }
+    .d1 { transition-delay:.1s; }
+    .d2 { transition-delay:.22s; }
+    .d3 { transition-delay:.34s; }
+    .d4 { transition-delay:.46s; }
+    .d5 { transition-delay:.58s; }
+
+    /* ── HERO ───────────────────────────────────────────────── */
+    #hero {
+      min-height:100vh;
+      display:grid; grid-template-columns:1fr 1fr;
+      position:relative;
+    }
+
+    .hero-l {
+      display:flex; flex-direction:column;
+      justify-content:flex-end;
+      padding:120px 48px 80px 80px;
+      position:relative; z-index:2;
+    }
+
+    .hero-eyebrow {
+      font-family:'Cormorant Garamond',serif;
+      font-style:italic; font-weight:300;
+      font-size:clamp(13px,1.4vw,17px);
+      letter-spacing:.45em; text-transform:uppercase;
+      color:var(--muted); margin-bottom:18px;
+    }
+
+    .hero-fn {
+      display:block;
+      font-family:'Syne',sans-serif; font-weight:800;
+      font-size: clamp(68px,11vw,145px);
+      line-height:.88; text-transform:uppercase;
+      letter-spacing:-.02em; color:var(--white);
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 1.3s cubic-bezier(.76,0,.24,1) .15s;
+    }
+    .hero-ln {
+      display:block;
+      font-family:'Syne',sans-serif; font-weight:800;
+      font-size: clamp(68px,11vw,145px);
+      line-height:.88; text-transform:uppercase;
+      letter-spacing:-.02em;
+      -webkit-text-stroke:2px var(--white); color:transparent;
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 1.3s cubic-bezier(.76,0,.24,1) .4s;
+    }
+    #hero.names-in .hero-fn,
+    #hero.names-in .hero-ln { clip-path: inset(0 0% 0 0); }
+
+    .hero-role-row {
+      display:flex; align-items:center; gap:18px;
+      margin-top:30px;
+    }
+    .hero-acc-line {
+      height:1px; width:48px;
+      background: var(--grad-acc);
+    }
+    .hero-role {
+      font-family:'Space Mono',monospace; font-size:10px;
+      letter-spacing:.3em; text-transform:uppercase;
+      color:var(--acc);
+    }
+
+    .hero-r {
+      position:relative; overflow:hidden;
+    }
+    .hero-img {
+      width:100%; height:100%;
+      object-fit:cover;
+      filter:grayscale(100%) contrast(1.08);
+      transform:scale(1.04);
+      transition:transform 10s ease;
+    }
+    #hero:hover .hero-img { transform:scale(1); }
+
+    /* Left gradient bleed */
+    .hero-r::before {
+      content:''; position:absolute; inset:0; z-index:1;
+      /* Lightened gradient for hero image overlay on the white background */
+      background:linear-gradient(to right, var(--bg) 0%, transparent 60%);
+    }
+
+    .hero-vtext {
+      position:absolute; right:22px; top:50%;
+      transform:translateY(-50%) rotate(90deg);
+      transform-origin:center;
+      font-family:'Space Mono',monospace; font-size:8px;
+      letter-spacing:.45em; text-transform:uppercase;
+      color:rgba(0,0,0,.18);
+      white-space:nowrap; z-index:2;
+    }
+
+    .scroll-ind {
+      position:absolute; bottom:44px; left:80px;
+      display:flex; flex-direction:column; align-items:center; gap:14px;
+    }
+    .scroll-ind-line {
+      width:1px; height:56px;
+      background:linear-gradient(to bottom, transparent, var(--white));
+      animation: scrollPulse 2.4s ease-in-out infinite;
+    }
+    .scroll-ind-txt {
+      font-family:'Space Mono',monospace; font-size:8px;
+      letter-spacing:.3em; text-transform:uppercase;
+      color:var(--muted); writing-mode:vertical-rl;
+    }
+    @keyframes scrollPulse {
+      0%,100%{opacity:.25} 50%{opacity:.8}
+    }
+
+    /* ── MARQUEE ────────────────────────────────────────────── */
+    .marquee-wrap {
+      overflow:hidden;
+      border-top:1px solid var(--dim);
+      border-bottom:1px solid var(--dim);
+      padding:22px 0;
+    }
+    .marquee-track {
+      display:inline-flex; white-space:nowrap;
+      animation: marquee 24s linear infinite;
+    }
+    .marquee-unit {
+      display:inline-flex; align-items:center; gap:36px;
+      margin-right:36px;
+    }
+    .marquee-word {
+      font-family:'Syne',sans-serif; font-weight:800;
+      font-size:clamp(28px,4vw,50px);
+      text-transform:uppercase; letter-spacing:.06em;
+      -webkit-text-stroke:1px rgba(0,0,0,.18);
+      color:transparent;
+    }
+    .marquee-gem {
+      width:7px; height:7px;
+      background:var(--acc); border-radius:50%;
+      /* Use green glow for the accent gems */
+      box-shadow:0 0 10px rgba(124,183,122,.5);
+      flex-shrink:0;
+    }
+    @keyframes marquee {
+      from{transform:translateX(0)}
+      to{transform:translateX(-50%)}
+    }
+
+    /* ── ABOUT ──────────────────────────────────────────────── */
+    #about {
+      padding:130px 80px;
+    }
+    .about-grid {
+      display:grid; grid-template-columns:1fr 1fr; gap:80px;
+      align-items:start;
+    }
+    .about-bio {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(19px,2.4vw,28px);
+      font-weight:300; line-height:1.55;
+      color:rgba(0,0,0,.72);
+    }
+    .about-bio strong { font-weight:600; color:var(--white); }
+
+    /* Cards */
+    .info-card {
+      padding:36px;
+      border:1px solid var(--dim);
+      position:relative;
+      margin-bottom:24px;
+    }
+    .info-card::before {
+      content:''; position:absolute;
+      top:-1px; left:0;
+      width:52px; height:1px;
+      background:var(--acc);
+    }
+    .card-label {
+      font-family:'Space Mono',monospace;
+      font-size:9px; letter-spacing:.4em;
+      text-transform:uppercase;
+      color:var(--muted); margin-bottom:28px;
+    }
+
+    /* Rate bar */
+    .rate-track {
+      width:100%; height:2px;
+      background:rgba(0,0,0,.07);
+      position:relative;
+    }
+    .rate-fill {
+      position:absolute; left:0; top:0; height:100%;
+      width:0;
+      background:linear-gradient(90deg, rgba(124,183,122,.5), var(--acc));
+      transition:width 2.2s cubic-bezier(.4,0,.2,1);
+    }
+    .rate-fill.go { width:28%; }
+    .rate-knob {
+      position:absolute; top:50%; left:0;
+      transform:translate(-50%,-50%);
+      width:12px; height:12px;
+      border:2px solid var(--acc); background:var(--bg);
+      border-radius:50%;
+      transition:left 2.2s cubic-bezier(.4,0,.2,1);
+    }
+    .rate-knob.go { left:28%; }
+    .rate-knob::after {
+      content:''; position:absolute; inset:2px;
+      background:var(--acc); border-radius:50%;
+      animation: knobPulse 2s ease-in-out infinite;
+    }
+    @keyframes knobPulse {
+      0%,100%{opacity:.5; transform:scale(1)}
+      50%{opacity:1; transform:scale(1.3)}
+    }
+    .rate-labels {
+      display:flex; justify-content:space-between;
+      margin-top:14px;
+    }
+    .rate-labels span {
+      font-family:'Space Mono',monospace; font-size:8px;
+      letter-spacing:.2em; text-transform:uppercase;
+      color:rgba(0,0,0,.25);
+    }
+    .rate-labels span:first-child { color:var(--acc); }
+    .rate-note {
+      margin-top:18px;
+      font-family:'Cormorant Garamond',serif;
+      font-style:italic; font-size:13px;
+      color:rgba(0,0,0,.5);
+    }
+
+    /* Skills */
+    .skill-row {
+      display:flex; align-items:center;
+      justify-content:space-between;
+      padding:11px 0;
+      border-bottom:1px solid rgba(0,0,0,.1);
+    }
+    .skill-row:last-child { border-bottom:none; }
+    .skill-nm {
+      font-family:'Cormorant Garamond',serif;
+      font-size:17px; font-weight:400;
+      color:rgba(0,0,0,.78);
+    }
+    .dots { display:flex; gap:5px; }
+    .dot {
+      width:6px; height:6px;
+      border:1px solid rgba(124,183,122,.3);
+      border-radius:50%;
+    }
+    .dot.on {
+      background:var(--acc); border-color:var(--acc);
+      box-shadow:0 0 7px rgba(124,183,122,.55);
+    }
+
+    /* Lang */
+    .lang-row {
+      display:flex; align-items:center;
+      justify-content:space-between;
+      padding:11px 0;
+      border-bottom:1px solid rgba(0,0,0,.1);
+    }
+    .lang-row:last-child { border-bottom:none; }
+    .lang-nm {
+      font-family:'Cormorant Garamond',serif;
+      font-size:17px; color:rgba(0,0,0,.78);
+    }
+    .lang-lv {
+      font-family:'Space Mono',monospace; font-size:8px;
+      letter-spacing:.2em; text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    /* ── CLIENTS ────────────────────────────────────────────── */
+    #clients { padding:130px 80px; }
+
+    .clients-grid {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:3px; margin-top:64px;
+    }
+    .cli-card {
+      position:relative;
+      aspect-ratio:3/4;
+      overflow:hidden;
+    }
+    .cli-img {
+      width:100%; height:100%;
+      object-fit:cover;
+      filter:grayscale(100%) contrast(1.06);
+      transform:scale(1.05);
+      transition:transform 1.4s cubic-bezier(.4,0,.2,1),
+                 filter 1.2s ease;
+    }
+    .cli-card:hover .cli-img {
+      transform:scale(1);
+      filter:grayscale(60%) contrast(1.1);
+    }
+    .cli-shade {
+      position:absolute; inset:0;
+      /* Light overlay for client cards to suit the white theme */
+      background:linear-gradient(to top,
+        rgba(255,255,255,.92) 0%, rgba(255,255,255,.15) 55%);
+      transition:background 1s ease;
+    }
+    .cli-card:hover .cli-shade {
+      background:linear-gradient(to top,
+        rgba(255,255,255,.95) 0%, rgba(255,255,255,.4) 60%);
+    }
+    .cli-info {
+      position:absolute; bottom:0; left:0; right:0;
+      padding:28px;
+      transform:translateY(14px);
+      transition:transform .9s cubic-bezier(.4,0,.2,1);
+    }
+    .cli-card:hover .cli-info { transform:none; }
+    .cli-idx {
+      font-family:'Space Mono',monospace; font-size:9px;
+      color:var(--acc); letter-spacing:.25em; margin-bottom:7px;
+    }
+    .cli-name {
+      font-family:'Syne',sans-serif; font-weight:700;
+      font-size:clamp(18px,2.2vw,26px);
+      text-transform:uppercase; letter-spacing:.06em;
+    }
+    .cli-sub {
+      margin-top:6px;
+      font-family:'Cormorant Garamond',serif;
+      font-style:italic; font-size:14px;
+      color:rgba(0,0,0,.45);
+      opacity:0; transition:opacity .7s ease .2s;
+    }
+    .cli-card:hover .cli-sub { opacity:1; }
+
+    /* ── PORTFOLIO ──────────────────────────────────────────── */
+    #portfolio { padding:130px 80px; }
+
+    .videos-grid {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:16px; margin-top:72px;
+    }
+
+    /* Base card */
+    .v-card {
+      position:relative;
+      aspect-ratio:9/16;
+      background:#f7f7f7;
+      overflow:hidden;
+    }
+    .v-card video {
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* Overlay (play state) */
+    .v-overlay {
+      position:absolute; inset:0;
+      background:rgba(255,255,255,.8);
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap:14px;
+      transition:opacity .7s ease;
+    }
+    .v-overlay.gone { opacity:0; pointer-events:none; }
+
+    .v-num {
+      position:absolute; top:16px; left:16px;
+      font-family:'Space Mono',monospace; font-size:9px;
+      letter-spacing:.25em; color:rgba(0,0,0,.38);
+    }
+
+    .play-ring {
+      width:58px; height:58px;
+      border:1px solid rgba(0,0,0,.38);
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      background:transparent;
+      /* Use the pointer cursor on interactive elements */
+      cursor:pointer;
+      transition:border-color .5s ease, background .5s ease,
+                 transform .5s ease;
+    }
+    .play-ring:hover {
+      border-color:var(--acc);
+      background:rgba(0,0,0,.08);
+      transform:scale(1.08);
+    }
+    .play-ring svg { width:17px; height:17px; fill:var(--white); margin-left:3px; }
+
+    .play-txt {
+      font-family:'Space Mono',monospace; font-size:8px;
+      letter-spacing:.35em; text-transform:uppercase;
+      color:rgba(0,0,0,.55); cursor:pointer;
+    }
+
+    /* End state */
+    .v-end {
+      position:absolute; inset:0;
+      background:rgba(255,255,255,.8);
+      display:none; flex-direction:column;
+      align-items:center; justify-content:center; gap:14px;
+    }
+    .v-end.show { display:flex; }
+
+    /* Volume bar */
+    .v-vol {
+      position:absolute; bottom:14px; left:14px; right:14px;
+      display:flex; align-items:center; gap:10px;
+      opacity:0;
+      transition:opacity .5s ease;
+    }
+    .v-card.playing .v-vol { opacity:1; }
+    .v-card:hover .v-vol { opacity:1; }
+
+    .vol-ico { width:14px; height:14px; fill:none;
+      stroke:var(--white); stroke-width:2;
+      stroke-linecap:round; stroke-linejoin:round;
+      flex-shrink:0; }
+
+    input[type=range].vol-range {
+      -webkit-appearance:none; appearance:none;
+      flex:1; height:2px;
+      background:rgba(0,0,0,.25);
+      outline:none; border:none; cursor:pointer;
+    }
+    input[type=range].vol-range::-webkit-slider-thumb {
+      -webkit-appearance:none;
+      width:10px; height:10px;
+      background:var(--white); border-radius:50%;
+      cursor:pointer;
+    }
+
+    /* Horizontal video */
+    .v-card-h {
+      position:relative;
+      aspect-ratio:16/9;
+      background:#f7f7f7;
+      overflow:hidden;
+      margin-top:72px;
+    }
+    .v-card-h video {
+      width:100%; height:100%; object-fit:cover; display:block;
+    }
+    .v-card-h .v-vol {
+      bottom:20px; left:20px; right:20px;
+    }
+    .v-card-h.playing .v-vol { opacity:1; }
+    .v-card-h:hover .v-vol { opacity:1; }
+
+    /* ── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      padding:60px 80px;
+      border-top:1px solid var(--dim);
+      display:flex; justify-content:space-between; align-items:flex-end;
+    }
+    .foot-name {
+      font-family:'Syne',sans-serif; font-weight:800;
+      font-size:clamp(28px,5vw,60px);
+      text-transform:uppercase; letter-spacing:-.02em;
+      line-height:.9;
+    }
+    .foot-r { text-align:right; }
+    .foot-copy {
+      font-family:'Space Mono',monospace; font-size:9px;
+      letter-spacing:.2em; color:rgba(0,0,0,.22);
+    }
+    .foot-role {
+      margin-top:8px;
+      font-family:'Cormorant Garamond',serif;
+      font-style:italic; font-size:16px;
+      color:rgba(0,0,0,.45);
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width:960px) {
+      #hero { grid-template-columns:1fr; }
+      .hero-r { height:65vw; }
+      /* Centre the hero text and reduce padding on smaller screens */
+      .hero-l { padding:80px 24px 72px 24px; text-align:center; align-items:center; }
+      .about-grid { grid-template-columns:1fr; }
+      .clients-grid { grid-template-columns:1fr 1fr; }
+      .videos-grid { grid-template-columns:repeat(2,1fr); }
+      #about, #clients, #portfolio { padding:90px 36px; }
+      nav { padding:20px 36px; }
+      footer { flex-direction:column; gap:28px; padding:48px 36px; }
+      .foot-r { text-align:left; }
+    }
+    @media (max-width:560px) {
+      /* For very small screens, stack content for easier reading */
+      nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        padding: 16px 24px;
+      }
+      .nav-links {
+        flex-direction: column;
+        gap: 14px;
+      }
+      .nav-links a {
+        font-size:9px;
+        opacity:.6;
+      }
+      /* Stack the hero section vertically */
+      #hero {
+        display:flex;
+        flex-direction:column;
+      }
+      .hero-r {
+        order:1;
+        width:100%;
+        height:45vh;
+      }
+      .hero-l {
+        order:2;
+        padding:60px 20px 40px;
+        text-align:center;
+        align-items:center;
+      }
+      /* Reduce the size of the hero names on small screens */
+      .hero-fn, .hero-ln {
+        font-size:clamp(42px,13vw,96px);
+      }
+      /* Center the hero role row */
+      .hero-role-row { justify-content:center; }
+      /* Hide decorative vertical text and scroll indicator on mobile */
+      .hero-vtext, .scroll-ind { display:none; }
+      /* Stack cards and videos into a single column */
+      .clients-grid { grid-template-columns:1fr; }
+      .videos-grid { grid-template-columns:1fr; }
+    }
+
+    /* Hide the intro loading animation on small devices and show the page immediately */
+    @media (max-width:600px) {
+      #intro { display:none !important; }
+      #page { opacity:1 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom cursor removed -->
+
+<!-- ── INTRO ──────────────────────────── -->
+<div id="intro">
+  <span class="i-eyebrow">Portfolio — Monteur Vidéo</span>
+  <span class="i-name">Oscar Sander</span>
+  <div class="i-timeline">
+    <div class="i-track"><div class="i-sweep"></div></div>
+    <div class="i-track"><div class="i-sweep"></div></div>
+    <div class="i-track"><div class="i-sweep"></div></div>
+    <div class="i-track"><div class="i-sweep"></div></div>
+    <div class="i-track-labels">
+      <span>00:00:00</span>
+      <span>Video Editor</span>
+      <span>00:00:12</span>
+    </div>
+    <div class="i-counter" id="i-pct">000</div>
+  </div>
+</div>
+
+<!-- ── PAGE ───────────────────────────── -->
+<div id="page">
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">OS</a>
+    <ul class="nav-links">
+      <li><a href="#about">Profil</a></li>
+      <li><a href="#clients">Clients</a></li>
+      <li><a href="#portfolio">Travaux</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-l">
+      <p class="hero-eyebrow">Monteur Vidéo Freelance</p>
+      <span class="hero-fn">Oscar</span>
+      <span class="hero-ln">Sander</span>
+      <div class="hero-role-row">
+        <div class="hero-acc-line"></div>
+        <span class="hero-role">Paris, France</span>
+      </div>
+      <div class="scroll-ind">
+        <div class="scroll-ind-line"></div>
+        <span class="scroll-ind-txt">Scroll</span>
+      </div>
+    </div>
+    <div class="hero-r">
+      <img class="hero-img" src="oscar.png" alt="Oscar Sander">
+      <span class="hero-vtext">Oscar Sander — Video Editor — 2024</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <div class="marquee-unit">
+        <span class="marquee-word">Montage Vidéo</span><div class="marquee-gem"></div>
+        <span class="marquee-word">Video Editing</span><div class="marquee-gem"></div>
+        <span class="marquee-word">Post-Production</span><div class="marquee-gem"></div>
+        <span class="marquee-word">Motion</span><div class="marquee-gem"></div>
+        <span class="marquee-word">Color Grading</span><div class="marquee-gem"></div>
+        <span class="marquee-word">Storytelling</span><div class="marquee-gem"></div>
+      </div>
+      <div class="marquee-unit" aria-hidden="true">
+        <span class="marquee-word">Montage Vidéo</span><div class="marquee-gem"></div>
+        <span class="marquee-word">Video Editing</span><div class="marquee-gem"></div>
+        <span class="marquee-word">Post-Production</span><div class="marquee-gem"></div>
+        <span class="marquee-word">Motion</span><div class="marquee-gem"></div>
+        <span class="marquee-word">Color Grading</span><div class="marquee-gem"></div>
+        <span class="marquee-word">Storytelling</span><div class="marquee-gem"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="sec-tag rv">
+      <span class="sec-num">01 —</span>
+      <span class="sec-name">Profil</span>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="about-grid">
+      <!-- Left: bio -->
+      <div>
+        <h2 class="big-head rv" style="margin-bottom:44px;">
+          À propos<br><span class="outline">de moi</span>
+        </h2>
+        <p class="about-bio rv d2">
+          Passionné par l'image en mouvement, je transforme des rushes bruts en
+          <strong>récits visuels percutants</strong>. Mon approche du montage est
+          rythmée, précise, et toujours au service de l'histoire.
+        </p>
+        <p class="about-bio rv d3" style="margin-top:22px;">
+          Spécialisé dans le <strong>court format</strong> et les productions
+          créateurs, je maîtrise l'art du rythme, de la coupe et de l'émotion
+          transmise par l'image.
+        </p>
+      </div>
+
+      <!-- Right: cards -->
+      <div>
+
+        <!-- Rate -->
+        <div class="info-card rv d1">
+          <div class="card-label">Positionnement tarifaire</div>
+          <div class="rate-track">
+            <div class="rate-fill" id="rateFill"></div>
+            <div class="rate-knob" id="rateKnob"></div>
+          </div>
+          <div class="rate-labels">
+            <span>Débutant</span>
+            <span>Amateur</span>
+            <span>Pro</span>
+          </div>
+          <p class="rate-note">Tarif variable selon la mission — devis sur demande.</p>
+        </div>
+
+        <!-- Skills -->
+        <div class="info-card rv d2">
+          <div class="card-label">Compétences techniques</div>
+          <!-- Updated first skill to CapCut and removed After Effects & DaVinci Resolve -->
+          <div class="skill-row">
+            <span class="skill-nm">CapCut</span>
+            <div class="dots">
+              <div class="dot on"></div><div class="dot on"></div>
+              <div class="dot on"></div><div class="dot on"></div>
+              <div class="dot"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <span class="skill-nm">Color Grading</span>
+            <div class="dots">
+              <div class="dot on"></div><div class="dot on"></div>
+              <div class="dot on"></div><div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <span class="skill-nm">Sound Design</span>
+            <div class="dots">
+              <div class="dot on"></div><div class="dot on"></div>
+              <div class="dot"></div><div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Languages -->
+        <div class="info-card rv d3">
+          <div class="card-label">Langues</div>
+          <div class="lang-row">
+            <span class="lang-nm">Français</span>
+            <span class="lang-lv">Natif</span>
+          </div>
+          <div class="lang-row">
+            <span class="lang-nm">Anglais</span>
+            <span class="lang-lv">Courant</span>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="info-card rv d4">
+          <div class="card-label">Localisation</div>
+          <!-- Display the city and country where the editor is based -->
+          <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,22px);font-weight:300;line-height:1.4;color:rgba(0,0,0,0.8);margin:0;">
+            Bangkok, Thaïlande
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="acc-bar"></div>
+
+  <!-- CLIENTS -->
+  <section id="clients">
+    <div class="sec-tag rv">
+      <span class="sec-num">02 —</span>
+      <span class="sec-name">Clients</span>
+      <div class="sec-rule"></div>
+    </div>
+    <h2 class="big-head rv" style="margin-bottom:14px;">
+      Ils m'ont<br><span class="outline">fait confiance</span>
+    </h2>
+
+    <div class="clients-grid">
+      <div class="cli-card rv d1">
+        <img class="cli-img" src="image1.png" alt="Alex Hitchens">
+        <div class="cli-shade"></div>
+        <div class="cli-info">
+          <div class="cli-idx">— 01</div>
+          <div class="cli-name">Alex Hitchens</div>
+          <div class="cli-sub">Créateur de contenu</div>
+        </div>
+      </div>
+      <div class="cli-card rv d2">
+        <img class="cli-img" src="image2.png" alt="Charli Feld">
+        <div class="cli-shade"></div>
+        <div class="cli-info">
+          <div class="cli-idx">— 02</div>
+          <div class="cli-name">Charli Feld</div>
+          <div class="cli-sub">Créatrice de contenu</div>
+        </div>
+      </div>
+      <div class="cli-card rv d3">
+        <img class="cli-img" src="image3.png" alt="Tempro">
+        <div class="cli-shade"></div>
+        <div class="cli-info">
+          <div class="cli-idx">— 03</div>
+          <div class="cli-name">Tempro</div>
+          <div class="cli-sub">Artiste / Créateur</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="acc-bar"></div>
+
+  <!-- PORTFOLIO -->
+  <section id="portfolio">
+    <div class="sec-tag rv">
+      <span class="sec-num">03 —</span>
+      <span class="sec-name">Travaux</span>
+      <div class="sec-rule"></div>
+    </div>
+    <h2 class="big-head rv" style="margin-bottom:10px;">
+      Mes<br><span class="outline">réalisations</span>
+    </h2>
+    <p class="rv d1" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:rgba(0,0,0,.38);margin-bottom:0;">
+      — Extraits courts format téléphone
+    </p>
+
+    <!-- 4 vertical videos -->
+    <div class="videos-grid">
+
+      <!-- V1 -->
+      <div class="v-card rv d1" id="card1">
+        <video id="v1" preload="metadata"><source src="video1.mp4" type="video/mp4"></video>
+        <div class="v-overlay" id="ov1">
+          <span class="v-num">01</span>
+          <button class="play-ring" onclick="startVideo(1)">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+          <span class="play-txt" onclick="startVideo(1)">Voir la vidéo</span>
+        </div>
+        <div class="v-end" id="end1">
+          <button class="play-ring" onclick="startVideo(1)">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+          <span class="play-txt" onclick="startVideo(1)">Voir la vidéo</span>
+        </div>
+        <div class="v-vol">
+          <svg class="vol-ico" viewBox="0 0 24 24">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+            <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>
+          </svg>
+          <input type="range" class="vol-range" min="0" max="1" step="0.02" value="1"
+                 oninput="document.getElementById('v1').volume=+this.value">
+        </div>
+      </div>
+
+      <!-- V2 -->
+      <div class="v-card rv d2" id="card2">
+        <video id="v2" preload="metadata"><source src="video2.mp4" type="video/mp4"></video>
+        <div class="v-overlay" id="ov2">
+          <span class="v-num">02</span>
+          <button class="play-ring" onclick="startVideo(2)">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+          <span class="play-txt" onclick="startVideo(2)">Voir la vidéo</span>
+        </div>
+        <div class="v-end" id="end2">
+          <button class="play-ring" onclick="startVideo(2)">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+          <span class="play-txt" onclick="startVideo(2)">Voir la vidéo</span>
+        </div>
+        <div class="v-vol">
+          <svg class="vol-ico" viewBox="0 0 24 24">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+            <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>
+          </svg>
+          <input type="range" class="vol-range" min="0" max="1" step="0.02" value="1"
+                 oninput="document.getElementById('v2').volume=+this.value">
+        </div>
+      </div>
+
+      <!-- V3 -->
+      <div class="v-card rv d3" id="card3">
+        <video id="v3" preload="metadata"><source src="video3.mp4" type="video/mp4"></video>
+        <div class="v-overlay" id="ov3">
+          <span class="v-num">03</span>
+          <button class="play-ring" onclick="startVideo(3)">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+          <span class="play-txt" onclick="startVideo(3)">Voir la vidéo</span>
+        </div>
+        <div class="v-end" id="end3">
+          <button class="play-ring" onclick="startVideo(3)">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+          <span class="play-txt" onclick="startVideo(3)">Voir la vidéo</span>
+        </div>
+        <div class="v-vol">
+          <svg class="vol-ico" viewBox="0 0 24 24">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+            <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>
+          </svg>
+          <input type="range" class="vol-range" min="0" max="1" step="0.02" value="1"
+                 oninput="document.getElementById('v3').volume=+this.value">
+        </div>
+      </div>
+
+      <!-- V4 -->
+      <div class="v-card rv d4" id="card4">
+        <video id="v4" preload="metadata"><source src="video4.mp4" type="video/mp4"></video>
+        <div class="v-overlay" id="ov4">
+          <span class="v-num">04</span>
+          <button class="play-ring" onclick="startVideo(4)">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+          <span class="play-txt" onclick="startVideo(4)">Voir la vidéo</span>
+        </div>
+        <div class="v-end" id="end4">
+          <button class="play-ring" onclick="startVideo(4)">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+          <span class="play-txt" onclick="startVideo(4)">Voir la vidéo</span>
+        </div>
+        <div class="v-vol">
+          <svg class="vol-ico" viewBox="0 0 24 24">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+            <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>
+          </svg>
+          <input type="range" class="vol-range" min="0" max="1" step="0.02" value="1"
+                 oninput="document.getElementById('v4').volume=+this.value">
+        </div>
+      </div>
+
+    </div><!-- /videos-grid -->
+
+    <!-- Horizontal video -->
+    <p class="rv" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:rgba(0,0,0,.38);margin-top:72px;margin-bottom:22px;">
+      — Format cinématographique 16:9
+    </p>
+
+    <div class="v-card-h rv" id="card5">
+      <video id="v5" preload="metadata"><source src="video5.mp4" type="video/mp4"></video>
+      <div class="v-overlay" id="ov5" style="background:rgba(255,255,255,.75);">
+        <span class="v-num">05</span>
+        <button class="play-ring" onclick="startVideo(5)" style="width:76px;height:76px;">
+          <svg viewBox="0 0 24 24" style="width:22px;height:22px;"><polygon points="5,3 19,12 5,21"/></svg>
+        </button>
+        <span class="play-txt" onclick="startVideo(5)">Voir la vidéo</span>
+      </div>
+      <div class="v-end" id="end5">
+        <button class="play-ring" onclick="startVideo(5)" style="width:76px;height:76px;">
+          <svg viewBox="0 0 24 24" style="width:22px;height:22px;"><polygon points="5,3 19,12 5,21"/></svg>
+        </button>
+        <span class="play-txt" onclick="startVideo(5)">Voir la vidéo</span>
+      </div>
+      <div class="v-vol">
+        <svg class="vol-ico" viewBox="0 0 24 24">
+          <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+          <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>
+        </svg>
+        <input type="range" class="vol-range" min="0" max="1" step="0.02" value="1"
+               oninput="document.getElementById('v5').volume=+this.value">
+      </div>
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-name rv">Oscar<br>Sander</div>
+    <div class="foot-r rv d2">
+      <div class="foot-copy">© 2024 — Tous droits réservés</div>
+      <div class="foot-role">Monteur Vidéo Freelance</div>
+    </div>
+  </footer>
+
+</div><!-- /page -->
+
+<script>
+/* Removed custom cursor JavaScript. The native pointer is now used instead. */
+
+/* ── INTRO ───────────────────────────────────────────────── */
+const pctEl = document.getElementById('i-pct');
+let n=0;
+const tick = setInterval(()=>{
+  n += Math.floor(Math.random()*14)+4;
+  if(n>=100){ n=100; clearInterval(tick); }
+  pctEl.textContent = String(n).padStart(3,'0');
+}, 75);
+
+setTimeout(()=>{
+  const intro = document.getElementById('intro');
+  const page  = document.getElementById('page');
+  intro.classList.add('exit');
+  page.classList.add('visible');
+  setTimeout(()=>{
+    intro.style.display='none';
+    document.getElementById('hero').classList.add('names-in');
+  }, 1150);
+}, 3700);
+
+/* ── SCROLL REVEAL ───────────────────────────────────────── */
+const revObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('in'); }
+  });
+},{threshold:.14});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+
+/* ── RATE BAR ─────────────────────────────────────────────── */
+let rateDone=false;
+const rateObs = new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting && !rateDone){
+    rateDone=true;
+    setTimeout(()=>{
+      document.getElementById('rateFill').classList.add('go');
+      document.getElementById('rateKnob').classList.add('go');
+    },500);
+  }
+},{threshold:.3});
+const aboutSec = document.getElementById('about');
+if(aboutSec) rateObs.observe(aboutSec);
+
+/* ── VIDEO PLAYER ─────────────────────────────────────────── */
+function startVideo(n){
+  const vid  = document.getElementById('v'+n);
+  const ov   = document.getElementById('ov'+n);
+  const end  = document.getElementById('end'+n);
+  const card = document.getElementById('card'+n);
+
+  end.classList.remove('show');
+  ov.style.transition='opacity .7s ease';
+  ov.style.opacity='0';
+  setTimeout(()=>ov.classList.add('gone'),700);
+
+  card.classList.add('playing');
+  vid.currentTime=0;
+  vid.play();
+
+  vid.onended=()=>{
+    card.classList.remove('playing');
+    end.classList.add('show');
+  };
+}
+
+/* Block native context menu on all videos */
+document.querySelectorAll('video').forEach(v=>{
+  v.addEventListener('contextmenu',e=>e.preventDefault());
+});
+</script>
+</body>
+</html>
